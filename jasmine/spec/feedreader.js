@@ -1,6 +1,6 @@
 // feedreader.js
 
-$(function () {
+$(document).ready(function () {
 
 
     describe('RSS Feeds', function () {
@@ -79,13 +79,14 @@ $(function () {
 
         beforeEach(function () {
             feedElement = $('.feed');
-            feedEntry = $('.feed .entry-link .entry');
+            feedEntry = document.querySelectorAll('.entry-link');
+            console.log(feedEntry);
         });
 
         /* making sure that the feed container has at least one feed loaded
          */
         it('feed is not empty', function () {
-            expect(feedEntry).not.toBe(null);
+            expect(feedEntry.length).not.toEqual(0);
         });
 
     });
@@ -94,27 +95,20 @@ $(function () {
 
     
         //load the first feed and save it before the test
-        beforeEach(function (done) {
-
+        beforeEach(function(done) {
             //called the async function to save the first feed
-            loadFeed(0, function(){
+            loadFeed(0, function() {
+              //first feed saved
+              firstFeed = $(".feed .entry")[0].innerText;
+              loadFeed(1, function() {
+                changedFeed = $(".feed .entry")[0].innerText;
                 done();
+              });
             });
-
-            //first feed saved
-            firstFeed = $('.feed');
-        });
+          });
+    
 
         it('new feed is loaded', function () {
-
-            //trying to call another feed (of index 1)
-            loadFeed(1, function(done){
-                done();
-            });
-
-            //saving the newly loaded feed
-            changedFeed = $('.feed');
-
             //checking if the two feeds are different
             expect(firstFeed).not.toBe(changedFeed);
         });
@@ -122,4 +116,4 @@ $(function () {
 
 
 
-}());
+});
